@@ -71,18 +71,60 @@ public class MySingleWithTailLinkedList implements Serializable
     }
 
     public Rental remove(int index) {
-        //  more code goes here.
-
-        return null;
+    	
+    	//copy-pasted from lab, will probably need to be changed somewhat
+    	if(index < 0 || index >= size() || top == null) {
+    		throw new IllegalArgumentException();
+    	}
+    	else if(index == 0) {
+    		if(top == null) {
+        		throw new IllegalArgumentException();
+        	}
+        	else {
+        		Rental data = top.getData();
+        		top = top.getNext();
+        		return data;
+        	}
+    	}
+    	else {
+    		int currentIndex = 0;
+    		Node current = top;
+    		while(currentIndex < index - 1) {
+    			current = current.getNext();
+    			currentIndex++;
+    		}
+    		Rental data = current.getNext().getData();
+    		current.setNext(current.getNext().getNext());
+    		return data;
+    	}
     }
 
     public Rental get(int index) {
-        //  more code goes here.
-
-        if (top == null)
-            return null;
-
-        return top.getData(); // this line will need to be changed
+    	
+    	//copy-pasted from lab with a few changes
+    	//will probably need to be changed more
+    	if(index < 0 || index >= size()) {
+    		throw new IllegalArgumentException();
+    	}
+    	else if(top == null) {
+    		return null;
+    	}
+    	else if(index == 0) {
+    		return top.getData();
+    	}
+    	else {
+    		int currentIndex = 0;
+    		Node current = top;
+    		while(currentIndex < index) {
+    			current = current.getNext();
+    			currentIndex++;
+    		}
+    		return current.getData();
+    	}
+//        if (top == null)
+//            return null;
+//
+//        return top.getData(); // this line will need to be changed
          }
 
     public void display() {
