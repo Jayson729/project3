@@ -94,14 +94,9 @@ public class MySingleWithTailLinkedList implements Serializable
 			throw new IllegalArgumentException();
 		}
 		else if(index == 0) {
-			if(top == null) {
-				throw new IllegalArgumentException();
-			}
-			else {
-				Rental data = top.getData();
-				top = top.getNext();
-				return data;
-			}
+			Rental data = top.getData();
+			top = top.getNext();
+			return data;
 		}
 		else {
 			int currentIndex = 0;
@@ -119,6 +114,7 @@ public class MySingleWithTailLinkedList implements Serializable
 				current.setNext(null);
 				tail = current;
 			}
+			
 			return data;
 		}
 	}
@@ -127,7 +123,8 @@ public class MySingleWithTailLinkedList implements Serializable
 
 		//copy-pasted from lab with a few changes
 		//will probably need to be changed more
-		if(index < 0 || index >= size()) {
+		if(index < 0 || (size() == 0 && index != 0) || 
+				(size() != 0 && index >= size())) {
 			throw new IllegalArgumentException();
 		}
 		else if(top == null) {
