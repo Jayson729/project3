@@ -50,46 +50,28 @@ public class MySingleWithTailLinkedList implements Serializable
 	 * @param rental the unit begin rented
 	 */
 	public void add(Rental rental) {
-		Node temp = top;
-
-		// no list
 		if (top == null) {
 			tail = top = new Node(rental, null);
-			return;
 		}
-
-		// rental is a Game, and rental goes on top
-		if (rental instanceof Game && top.getData().dueBack.after(rental.dueBack)) {
+		else if(rental.dueBack.before(top.getData().dueBack)) {
 			top = new Node(rental, top);
-			return;
 		}
 		else {
-
-			/*
-			 * just adds it to the end, this does not sort anything 
-			 * will definitely need to be changed, 
-			 * just wanted this to test the get method
-			 */
-			int currentIndex = 0;
 			Node current = top;
-			while(currentIndex < size() - 1) {
+			while(current.getNext() != null && 
+					!rental.dueBack.before(current.getNext().getData().dueBack)) {
 				current = current.getNext();
-				currentIndex++;
 			}
-			Node newNode = new Node(rental, null);
+
+			Node newNode = new Node(rental, current.getNext());
+			if(current.getNext() == null) {
+				tail = newNode;
+			}
 			current.setNext(newNode);
-			tail = newNode;
 		}
-
-		//  more code goes here.
-
-		return;
-
 	}
 
 	public Rental remove(int index) {
-
-		//copy-pasted from lab, will probably need to be changed somewhat
 		if(index < 0 || index >= size() || top == null) {
 			throw new IllegalArgumentException();
 		}
@@ -114,17 +96,13 @@ public class MySingleWithTailLinkedList implements Serializable
 				current.setNext(null);
 				tail = current;
 			}
-			
+
 			return data;
 		}
 	}
 
 	public Rental get(int index) {
-
-		//copy-pasted from lab with a few changes
-		//will probably need to be changed more
-		if(index < 0 || (size() == 0 && index != 0) || 
-				(size() != 0 && index >= size())) {
+		if(index < 0 || index >= size()) {
 			throw new IllegalArgumentException();
 		}
 		else if(top == null) {
