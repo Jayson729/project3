@@ -53,13 +53,17 @@ public class MySingleWithTailLinkedList implements Serializable
 		if (top == null) {
 			tail = top = new Node(rental, null);
 		}
+		
+		//sets top to rental if rental is due before top
 		else if(rental.dueBack.before(top.getData().dueBack)) {
 			top = new Node(rental, top);
 		}
 		else {
 			Node current = top;
+			
+			//loops until rental is due after a node, then inserts after that node
 			while(current.getNext() != null && 
-					!rental.dueBack.before(current.getNext().getData().dueBack)) {
+					rental.dueBack.after(current.getNext().getData().dueBack)) {
 				current = current.getNext();
 			}
 
