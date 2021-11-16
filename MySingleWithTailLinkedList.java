@@ -3,6 +3,7 @@ package project3;
 import java.io.Serializable;
 import java.util.Random;
 
+
 public class MySingleWithTailLinkedList implements Serializable
 {
 	private Node top;
@@ -53,20 +54,33 @@ public class MySingleWithTailLinkedList implements Serializable
 		if (top == null) {
 			tail = top = new Node(rental, null);
 		}
-		
 		//sets top to rental if rental is due before top
-		else if(rental.dueBack.before(top.getData().dueBack)) {
+		else if(rental instanceof Game && rental.dueBack.before(top.getData().dueBack)) {
 			top = new Node(rental, top);
 		}
 		else {
 			Node current = top;
 			
-			//loops until rental is due after a node, then inserts after that node
+			//if rental is a console, set current to first console
+			if(rental instanceof Console) {
+				while(current.getNext() != null &&
+						current.getNext().getData() instanceof Game) {
+					current = current.getNext();
+				}
+			}
+			
+			//loops through until rental is not due after the next node
 			while(current.getNext() != null && 
 					rental.dueBack.after(current.getNext().getData().dueBack)) {
+				
+				//checks if rental is a game and the next node is a console
+				if(rental instanceof Game && 
+						current.getNext().getData() instanceof Console) {
+					break;
+				}
 				current = current.getNext();
 			}
-
+			
 			Node newNode = new Node(rental, current.getNext());
 			if(current.getNext() == null) {
 				tail = newNode;
