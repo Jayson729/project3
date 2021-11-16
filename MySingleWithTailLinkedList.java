@@ -51,28 +51,53 @@ public class MySingleWithTailLinkedList implements Serializable
 	 * @param rental the unit begin rented
 	 */
 	public void add(Rental rental) {
+
+		//if list is empty
 		if (top == null) {
 			tail = top = new Node(rental, null);
 		}
+
 		//sets top to rental if rental is due before top
-		else if(rental instanceof Game && rental.dueBack.before(top.getData().dueBack)) {
+		else if(rental instanceof Game && 
+				rental.dueBack.before(top.getData().dueBack)) {
 			top = new Node(rental, top);
+		}
+		else if(rental instanceof Game && 
+				rental.dueBack.equals(top.getData().dueBack)) {
+
+			//if rental's name of renter is before or equal to top's, set top
+			if(rental.getNameOfRenter().compareTo(top.getData().getNameOfRenter()) <= 0) {
+				top = new Node(rental, top);
+			}
+
+			//if rental's name is after top's, set it after top
+			else {
+				Node newNode = new Node(rental, top.getNext());
+				if(top.getNext() == null) {
+					tail = newNode;
+				}
+				top.setNext(newNode);
+			}
 		}
 		else {
 			Node current = top;
-			
-			//if rental is a console, set current to first console
+
+			//if rental is a console, set current to last game
 			if(rental instanceof Console) {
 				while(current.getNext() != null &&
 						current.getNext().getData() instanceof Game) {
 					current = current.getNext();
 				}
 			}
-			
+
 			//loops through until rental is not due after the next node
 			while(current.getNext() != null && 
-					rental.dueBack.after(current.getNext().getData().dueBack)) {
-				
+					(rental.dueBack.after(current.getNext().getData().dueBack) || 
+							(rental.dueBack.equals(current.getNext().getData().dueBack)
+									&& rental.nameOfRenter.compareTo(current.getNext().getData().nameOfRenter) > 0)
+							)
+					) {
+
 				//checks if rental is a game and the next node is a console
 				if(rental instanceof Game && 
 						current.getNext().getData() instanceof Console) {
@@ -80,7 +105,8 @@ public class MySingleWithTailLinkedList implements Serializable
 				}
 				current = current.getNext();
 			}
-			
+
+			//insert after current
 			Node newNode = new Node(rental, current.getNext());
 			if(current.getNext() == null) {
 				tail = newNode;
@@ -101,12 +127,15 @@ public class MySingleWithTailLinkedList implements Serializable
 		else {
 			int currentIndex = 0;
 			Node current = top;
+
+			//current is at index - 1
 			while(currentIndex < index - 1) {
 				current = current.getNext();
 				currentIndex++;
 			}
 			Rental data = current.getNext().getData();
 
+			//if the space after index is null, index is the tail
 			if(current.getNext().getNext() != null) {
 				current.setNext(current.getNext().getNext());
 			}
@@ -123,12 +152,11 @@ public class MySingleWithTailLinkedList implements Serializable
 		if(index < 0 || index >= size()) {
 			throw new IllegalArgumentException();
 		}
-		else if(top == null) {
-			return null;
-		}
 		else {
 			int currentIndex = 0;
 			Node current = top;
+
+			//current is at index
 			while(currentIndex < index) {
 				current = current.getNext();
 				currentIndex++;
