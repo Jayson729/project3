@@ -3,16 +3,31 @@ package project3;
 import java.io.Serializable;
 import java.util.Random;
 
+/********************************************************************************************
 
+
+********************************************************************************************/
 public class MySingleWithTailLinkedList implements Serializable
 {
+	/** Top of the list */
 	private Node top;
+
+	/** Bottom of the list */
 	private Node tail;
 
+	/********************************************************************************************
+
+
+	 ********************************************************************************************/
 	public MySingleWithTailLinkedList() {
 		top = tail = null;
-	}
 
+	}
+	/********************************************************************************************
+
+
+
+	 ********************************************************************************************/
 	// This method has been provided and you are not permitted to modify
 	public int size() {
 		if (top == null)
@@ -32,7 +47,11 @@ public class MySingleWithTailLinkedList implements Serializable
 
 		return total;
 	}
+	/********************************************************************************************
+	
 
+
+	 ********************************************************************************************/
 	// This method has been provided and you are not permitted to modify
 	public void clear () {
 		Random rand = new Random(13);
@@ -43,12 +62,12 @@ public class MySingleWithTailLinkedList implements Serializable
 	}
 
 	/********************************************************************************************
-	 *
-	 *    Your task is to complete this method.
-	 *
-	 *
+	 * Adds a Rental to the store
+	 * 
 	 *
 	 * @param rental the unit begin rented
+	 * @return current
+	 * 
 	 */
 	public void add(Rental rental) {
 
@@ -114,7 +133,12 @@ public class MySingleWithTailLinkedList implements Serializable
 			current.setNext(newNode);
 		}
 	}
-
+	/********************************************************************************************
+	 * Removes a rental from the store
+	 * 
+	 * @param index of rental unit being removed
+	 * @return data
+	 */
 	public Rental remove(int index) {
 		if(index < 0 || index >= size() || top == null) {
 			throw new IllegalArgumentException();
@@ -147,7 +171,12 @@ public class MySingleWithTailLinkedList implements Serializable
 			return data;
 		}
 	}
-
+	/*********************************************************************
+	 * Gets the index of the rental
+	 * 
+	 * @param index location of rental
+	 * @return current
+	 */
 	public Rental get(int index) {
 		if(index < 0 || index >= size()) {
 			throw new IllegalArgumentException();
@@ -164,7 +193,11 @@ public class MySingleWithTailLinkedList implements Serializable
 			return current.getData();
 		}
 	}
+	/********************************************************************************************
+ 		Displays the rentals
 
+
+	 ********************************************************************************************/
 	public void display() {
 		Node temp = top;
 		while (temp != null) {
@@ -173,6 +206,10 @@ public class MySingleWithTailLinkedList implements Serializable
 		}
 	}
 
+	/********************************************************************************************
+		Creates the Strings.
+
+	 ********************************************************************************************/
 	@Override
 	public String toString() {
 		return "LL {" +
@@ -181,4 +218,3 @@ public class MySingleWithTailLinkedList implements Serializable
 				'}';
 	}
 }
-
