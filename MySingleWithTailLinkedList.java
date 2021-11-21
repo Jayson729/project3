@@ -3,7 +3,6 @@ package project3;
 import java.io.Serializable;
 import java.util.Random;
 
-
 public class MySingleWithTailLinkedList implements Serializable
 {
 	private Node top;
@@ -55,64 +54,66 @@ public class MySingleWithTailLinkedList implements Serializable
 		//if list is empty
 		if (top == null) {
 			tail = top = new Node(rental, null);
+			return;
 		}
 
 		//sets top to rental if rental is due before top
-		else if(rental instanceof Game && 
+		if(rental instanceof Game && 
 				rental.dueBack.before(top.getData().dueBack)) {
 			top = new Node(rental, top);
+			return;
 		}
-		else if(rental instanceof Game && 
+
+		/*
+		 * sets top to rental if rental is due at the same time as top 
+		 * but name is before or equal to top
+		 */
+		if(rental instanceof Game && 
 				rental.dueBack.equals(top.getData().dueBack)) {
 
 			//if rental's name of renter is before or equal to top's, set top
 			if(rental.getNameOfRenter().compareTo(top.getData().getNameOfRenter()) <= 0) {
 				top = new Node(rental, top);
-			}
-
-			//if rental's name is after top's, set it after top
-			else {
-				Node newNode = new Node(rental, top.getNext());
-				if(top.getNext() == null) {
-					tail = newNode;
-				}
-				top.setNext(newNode);
+				return;
 			}
 		}
-		else {
-			Node current = top;
 
-			//if rental is a console, set current to last game
-			if(rental instanceof Console) {
-				while(current.getNext() != null &&
-						current.getNext().getData() instanceof Game) {
-					current = current.getNext();
-				}
-			}
+		Node current = top;
 
-			//loops through until rental is not due after the next node
-			while(current.getNext() != null && 
-					(rental.dueBack.after(current.getNext().getData().dueBack) || 
-							(rental.dueBack.equals(current.getNext().getData().dueBack)
-									&& rental.nameOfRenter.compareTo(current.getNext().getData().nameOfRenter) > 0)
-							)
-					) {
-
-				//checks if rental is a game and the next node is a console
-				if(rental instanceof Game && 
-						current.getNext().getData() instanceof Console) {
-					break;
-				}
+		//if rental is a console, set current to last game
+		if(rental instanceof Console) {
+			while(current.getNext() != null &&
+					current.getNext().getData() instanceof Game) {
 				current = current.getNext();
 			}
-
-			//insert after current
-			Node newNode = new Node(rental, current.getNext());
-			if(current.getNext() == null) {
-				tail = newNode;
-			}
-			current.setNext(newNode);
 		}
+
+		/*
+		 * loops through until rental is not due after the next node
+		 * if rental is due at the same time as the next node, 
+		 * then it checks if the name is after the next node
+		 */
+		while(current.getNext() != null && 
+				(rental.dueBack.after(current.getNext().getData().dueBack) || 
+						(rental.dueBack.equals(current.getNext().getData().dueBack)
+								&& rental.nameOfRenter.compareTo(current.getNext().getData().nameOfRenter) > 0)
+						)
+				) {
+
+			//checks if rental is a game and the next node is a console
+			if(rental instanceof Game && 
+					current.getNext().getData() instanceof Console) {
+				break;
+			}
+			current = current.getNext();
+		}
+
+		//insert after current
+		Node newNode = new Node(rental, current.getNext());
+		if(current.getNext() == null) {
+			tail = newNode;
+		}
+		current.setNext(newNode);
 	}
 
 	public Rental remove(int index) {
@@ -120,6 +121,8 @@ public class MySingleWithTailLinkedList implements Serializable
 			throw new IllegalArgumentException();
 		}
 		else if(index == 0) {
+
+			//sets new top
 			Rental data = top.getData();
 			top = top.getNext();
 			return data;
