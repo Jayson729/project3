@@ -86,10 +86,7 @@ public class MySingleWithTailLinkedList implements Serializable
 			return;
 		}
 
-		/*
-		 * sets top to rental if rental is due at the same time as top 
-		 * but name is before or equal to top
-		 */
+		//if rental's due date is the same as top, sort by name
 		if(rental instanceof Game && 
 				rental.dueBack.equals(top.getData().dueBack)) {
 
@@ -101,33 +98,32 @@ public class MySingleWithTailLinkedList implements Serializable
 		}
 
 		Node current = top;
-
-		//if rental is a console, set current to last game
-		if(rental instanceof Console) {
-			while(current.getNext() != null &&
-					current.getNext().getData() instanceof Game) {
-				current = current.getNext();
-			}
-		}
-
-		/*
-		 * loops through until rental is not due after the next node
-		 * if rental is due at the same time as the next node, 
-		 * then it checks if the name is after the next node
-		 */
-		while(current.getNext() != null && 
-				(rental.dueBack.after(current.getNext().getData().dueBack) || 
-						(rental.dueBack.equals(current.getNext().getData().dueBack) && 
-								rental.nameOfRenter.compareTo(
-										current.getNext().getData().nameOfRenter) > 0))
-				) {
-
-			//checks if rental is a game and the next node is a console
+		while(current.getNext() != null) {
 			if(rental instanceof Game && 
 					current.getNext().getData() instanceof Console) {
+				
+				//if rental is the last game, break the loop at the last game
 				break;
 			}
-			current = current.getNext();
+			else if(rental instanceof Console && 
+					current.getNext().getData() instanceof Game) {
+				
+				//if rental is a console, set current to last game
+				current = current.getNext();
+			}
+			else if(rental.dueBack.after(current.getNext().getData().dueBack)) {
+				current = current.getNext();
+			}
+			else if(rental.dueBack.equals(current.getNext().getData().dueBack) && 
+					rental.nameOfRenter.compareTo(
+							current.getNext().getData().nameOfRenter) > 0) {
+				
+				//if due dates are equal, sort based on name
+				current = current.getNext();
+			}
+			else {
+				break;
+			}
 		}
 
 		//insert after current
