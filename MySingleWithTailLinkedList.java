@@ -1,31 +1,38 @@
+/*****************************************************************
+Class with logic required for a MySingleWithTailLinkedList
+
+@author Jayson Willey, Jacob Avalos
+@version Fall 2021
+ *****************************************************************/
 package project3;
 
 import java.io.Serializable;
 import java.util.Random;
 
-
 public class MySingleWithTailLinkedList implements Serializable
 {
-	/** Top of the list */
+	/** Node at the top of the list */
 	private Node top;
 
-	/** Bottom of the list */
+	/** Node at the end of the list */
 	private Node tail;
 
 	/********************************************************************************************
-
-
-	 ********************************************************************************************/
+	 * Default constructor, sets both top and tail to null
+	 * 
+	 */
 	public MySingleWithTailLinkedList() {
 		top = tail = null;
 
 	}
-	/********************************************************************************************
 
-
-
-	 ********************************************************************************************/
 	// This method has been provided and you are not permitted to modify
+	/********************************************************************************************
+	 * returns the current size of the list
+	 * 
+	 * @return size of list
+	 * @throws RuntimeException when tail is not pointing at the end of the list
+	 */
 	public int size() {
 		if (top == null)
 			return 0;
@@ -44,12 +51,12 @@ public class MySingleWithTailLinkedList implements Serializable
 
 		return total;
 	}
-	/********************************************************************************************
-	
 
-
-	 ********************************************************************************************/
 	// This method has been provided and you are not permitted to modify
+	/********************************************************************************************
+	 * Clears the list using the remove method
+	 * 
+	 */
 	public void clear () {
 		Random rand = new Random(13);
 		while (size() > 0) {
@@ -59,12 +66,10 @@ public class MySingleWithTailLinkedList implements Serializable
 	}
 
 	/********************************************************************************************
-	 * Adds a Rental to the store
-	 * 
+	 * Adds a Rental to the store sorted by due date. 
+	 * If due dates are equal it then sorts by name.
 	 *
-	 * @param rental the unit begin rented
-	 * @return current
-	 * 
+	 * @param rental the rental being added
 	 */
 	public void add(Rental rental) {
 
@@ -89,7 +94,7 @@ public class MySingleWithTailLinkedList implements Serializable
 				rental.dueBack.equals(top.getData().dueBack)) {
 
 			//if rental's name of renter is before or equal to top's, set top
-			if(rental.getNameOfRenter().compareTo(top.getData().getNameOfRenter()) <= 0) {
+			if(rental.nameOfRenter.compareTo(top.getData().nameOfRenter) <= 0) {
 				top = new Node(rental, top);
 				return;
 			}
@@ -112,9 +117,9 @@ public class MySingleWithTailLinkedList implements Serializable
 		 */
 		while(current.getNext() != null && 
 				(rental.dueBack.after(current.getNext().getData().dueBack) || 
-						(rental.dueBack.equals(current.getNext().getData().dueBack)
-								&& rental.nameOfRenter.compareTo(current.getNext().getData().nameOfRenter) > 0)
-						)
+						(rental.dueBack.equals(current.getNext().getData().dueBack) && 
+								rental.nameOfRenter.compareTo(
+										current.getNext().getData().nameOfRenter) > 0))
 				) {
 
 			//checks if rental is a game and the next node is a console
@@ -132,11 +137,13 @@ public class MySingleWithTailLinkedList implements Serializable
 		}
 		current.setNext(newNode);
 	}
+
 	/********************************************************************************************
-	 * Removes a rental from the store
+	 * Removes a node at a specified index
 	 * 
-	 * @param index of rental unit being removed
-	 * @return data
+	 * @param index the index of the node being removed
+	 * @return A Rental containing the data of the Node that was removed
+	 * @throws IllegalArgumentException when index is out of range or when the list is empty
 	 */
 	public Rental remove(int index) {
 		if(index < 0 || index >= size() || top == null) {
@@ -172,11 +179,13 @@ public class MySingleWithTailLinkedList implements Serializable
 			return data;
 		}
 	}
-	/*********************************************************************
-	 * Gets the index of the rental
+
+	/********************************************************************************************
+	 * Returns the Rental at a given index
 	 * 
-	 * @param index location of rental
-	 * @return current
+	 * @param index the index of the rental
+	 * @return The Rental at the given index
+	 * @throws IllegalArgumentException when index is out of range
 	 */
 	public Rental get(int index) {
 		if(index < 0 || index >= size()) {
@@ -194,11 +203,11 @@ public class MySingleWithTailLinkedList implements Serializable
 			return current.getData();
 		}
 	}
+
 	/********************************************************************************************
- 		Displays the rentals
-
-
-	 ********************************************************************************************/
+	 * Displays the list of rentals in the console
+	 * 
+	 */
 	public void display() {
 		Node temp = top;
 		while (temp != null) {
@@ -208,9 +217,10 @@ public class MySingleWithTailLinkedList implements Serializable
 	}
 
 	/********************************************************************************************
-		Creates the Strings.
-
-	 ********************************************************************************************/
+	 * toString method for MySingleWithTailLinkedList
+	 * 
+	 * @return String A string that represents a MySingleWithTailLinkedList object
+	 */
 	@Override
 	public String toString() {
 		return "LL {" +
